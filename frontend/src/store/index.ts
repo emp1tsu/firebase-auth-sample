@@ -24,6 +24,9 @@ export default new Vuex.Store({
     addNote(state, note) {
       state.notes.unshift(note);
     },
+    updateNote(state, note) {
+      // state.note
+    },
     deleteNote(state, id) {
       console.log({ state, id });
       state.notes = state.notes.filter((note) => note.id !== id);
@@ -59,6 +62,20 @@ export default new Vuex.Store({
       );
       const note = response.data.body;
       commit("addNote", note);
+    },
+    async updateNote({ commit, state }, { id, title, body }) {
+      const idToken = await state.userData.getIdToken();
+      const response = await axios.put(
+        `http://localhost:1234/api/v1/note/${id}`,
+        { title, body },
+        {
+          headers: {
+            Authorization: idToken,
+          },
+        }
+      );
+      const note = response.data.body;
+      commit("updateNote", note);
     },
     async deleteNote({ commit, state }, { id }) {
       const idToken = await state.userData.getIdToken();

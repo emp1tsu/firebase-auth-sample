@@ -1,20 +1,10 @@
 <template>
-  <v-app>
+  <div class="d-flex flex-row">
     <Header :changeSelectedNoteId="changeSelectedNoteId" />
-    <v-main>
-      <v-container class="pa-0" fill-height>
-        <v-row class="text-center" style="height: 100%;">
-          <v-col v-if="note" cols="12" class="pa-0">
-            <Editor :note="note" />
-          </v-col>
-          <v-col v-else cols="12" class="pa-0">
-            <p>ノートを選択してください</p>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-    <v-footer app>footer</v-footer>
-  </v-app>
+    <main class="d-flex flex-column w-100 vh-100">
+      <Editor :note="note" />
+    </main>
+  </div>
 </template>
 
 <script lang="ts">
@@ -55,8 +45,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.editor {
-  width: 600px;
-  height: 800px;
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
 }
 </style>

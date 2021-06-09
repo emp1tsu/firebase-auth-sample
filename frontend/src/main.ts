@@ -5,9 +5,11 @@ import router from "./router";
 import store from "./store";
 import firebase from "firebase/app";
 import "firebase/auth";
-import vuetify from "./plugins/vuetify";
 import VueCompositionApi from "@vue/composition-api";
 import vueDebounce from "vue-debounce";
+
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 Vue.use(VueCompositionApi);
 Vue.use(vueDebounce);
@@ -30,6 +32,5 @@ firebase.initializeApp(config);
 new Vue({
   router,
   store,
-  vuetify,
   render: (h) => h(App),
 }).$mount("#app");

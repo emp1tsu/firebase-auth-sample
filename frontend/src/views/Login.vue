@@ -1,14 +1,10 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <div v-if="showError">
-          {{ errorMessage }}
-        </div>
-        <button @click="googleLogin">Googleアカウントでログイン</button>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <div v-if="showError">
+      {{ errorMessage }}
+    </div>
+    <button @click="googleLogin">Googleアカウントでログイン</button>
+  </div>
 </template>
 
 <script>

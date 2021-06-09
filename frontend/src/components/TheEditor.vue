@@ -1,22 +1,23 @@
 <template>
-  <div class="editor-container">
-    <div class="px-5 py-2">
-      <v-text-field
-        outlined
-        dense
-        hide-details="true"
-        v-model="note.title"
-        v-debounce:300ms="test"
-      ></v-text-field>
+  <div class="d-flex flex-column vh-100 overflow-hidden">
+    <div class="d-flex">
+      <input
+        class="btn"
+        type="button"
+        value="Save"
+        @click="handleUpdateNote(note.id, note.title, note.body)"
+      />
+      <input type="text" class="form-control" v-model="note.title" />
     </div>
-    <MonacoEditor
-      class="editor"
-      v-model="note.body"
-      language="markdown"
-      theme="vs-dark"
-      ref="editor"
-      v-debounce:300ms="test"
-    />
+    <div class="h-100 w-100">
+      <MonacoEditor
+        v-model="note.body"
+        class="h-100 w-100"
+        language="markdown"
+        theme="vs-dark"
+        ref="editor"
+      />
+    </div>
   </div>
 </template>
 
@@ -40,23 +41,28 @@ export default defineComponent({
   props: {
     note: {
       type: Object as PropType<Note>,
-      default: {},
+      default: function() {
+        return {};
+      },
     },
   },
-  setup(props, { root }) {
+  setup(props: any, { root }: any) {
+    const store = root.$store;
     const state = reactive<State>({ editor: null });
 
     window.addEventListener("resize", (e) => {
       state.editor.getMonaco().layout();
     });
 
-    const test = () => {
-      console.log("test");
+    const handleUpdateNote = (id: string, title: string, body: string) => {
+      console.log(id, title, body);
+      if (!id) return;
+      store.dispatch("updateNote", { id, title, body });
     };
 
     return {
       ...toRefs(state),
-      test,
+      handleUpdateNote,
     };
   },
 });
