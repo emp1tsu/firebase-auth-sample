@@ -5,13 +5,11 @@ import router from "./router";
 import store from "./store";
 import firebase from "firebase/app";
 import "firebase/auth";
-import VueCompositionApi from "@vue/composition-api";
 import vueDebounce from "vue-debounce";
 
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-Vue.use(VueCompositionApi);
 Vue.use(vueDebounce);
 
 Vue.config.productionTip = false;

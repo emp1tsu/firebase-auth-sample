@@ -22,48 +22,41 @@
 </template>
 
 <script lang="ts">
-import { Note } from "@/store/types";
-import {
-  defineComponent,
-  PropType,
-  reactive,
-  toRefs,
-} from "@vue/composition-api";
+import Vue, { PropType } from "vue";
 import MonacoEditor from "vue-monaco";
+import { Note } from "@/store/types";
 
-type State = {
+type DataType = {
   editor: any;
 };
 
-export default defineComponent({
+export default Vue.extend({
   name: "Editor",
   components: { MonacoEditor },
   props: {
     note: {
       type: Object as PropType<Note>,
-      default: function() {
+      default: () => {
         return {};
       },
     },
   },
-  setup(props: any, { root }: any) {
-    const store = root.$store;
-    const state = reactive<State>({ editor: null });
-
+  data(): DataType {
+    return {
+      editor: null,
+    };
+  },
+  mounted() {
     window.addEventListener("resize", (e) => {
-      state.editor.getMonaco().layout();
+      this.editor.getMonaco().layout();
     });
-
-    const handleUpdateNote = (id: string, title: string, body: string) => {
+  },
+  methods: {
+    handleUpdateNote(id: string, title: string, body: string) {
       console.log(id, title, body);
       if (!id) return;
-      store.dispatch("updateNote", { id, title, body });
-    };
-
-    return {
-      ...toRefs(state),
-      handleUpdateNote,
-    };
+      this.$store.dispatch("updateNote", { id, title, body });
+    },
   },
 });
 </script>

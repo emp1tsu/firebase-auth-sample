@@ -8,38 +8,30 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  reactive,
-  toRefs,
-} from "@vue/composition-api";
+import Vue from "vue";
 import Header from "../components/TheHeader.vue";
 import Editor from "../components/TheEditor.vue";
 
-type State = {
-  selectedNoteId: string;
-  note: any;
-};
-
-export default defineComponent({
+export default Vue.extend({
   name: "Home",
   components: {
     Header,
     Editor,
   },
-  setup(props, { root }) {
-    const store = root.$store;
-    const state = reactive<State>({
+  data() {
+    return {
       selectedNoteId: "",
-      note: computed(() => store.getters.noteById(state.selectedNoteId)),
-    }) as State;
-
-    const changeSelectedNoteId = (id: string) => {
-      state.selectedNoteId = id;
     };
-
-    return { ...toRefs(state), changeSelectedNoteId };
+  },
+  computed: {
+    note(): any {
+      return this.$store.getters.noteById(this.selectedNoteId);
+    },
+  },
+  methods: {
+    changeSelectedNoteId(id: string) {
+      this.selectedNoteId = id;
+    },
   },
 });
 </script>

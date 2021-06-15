@@ -4,28 +4,25 @@
 
 <script lang="ts">
 import firebase from "firebase/app";
-import { computed, defineComponent, onMounted } from "@vue/composition-api";
+import Vue from "vue";
 
-export default defineComponent({
+export default Vue.extend({
   name: "app",
-  setup(props, { root }) {
-    const store = root.$store;
-
-    const user = computed(() => store.getters.userData);
-
-    onMounted(() => {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          store.dispatch("setUser", { user, isLogin: true });
-        } else {
-          store.dispatch("setUser", { user, isLogin: false });
-        }
-      });
-
-      console.log("app.vue onmounted");
+  computed: {
+    user() {
+      return this.$store.getters.userData;
+    },
+  },
+  mounted() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.$store.dispatch("setUser", { user, isLogin: true });
+      } else {
+        this.$store.dispatch("setUser", { user, isLogin: false });
+      }
     });
 
-    return { user };
+    console.log("app.vue onmounted");
   },
 });
 </script>

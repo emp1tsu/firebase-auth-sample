@@ -100,13 +100,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  reactive,
-  toRefs,
-  PropType,
-} from "@vue/composition-api";
+import Vue, { PropType } from "vue";
 import firebase from "firebase/app";
 
 type Item = {
@@ -115,75 +109,61 @@ type Item = {
   icon: string;
 };
 
-type State = {
-  items: Item[];
-  drawer: boolean;
-};
-
 const defaultItems: Item[] = [
   { id: "get-all-notes", title: "All Notes", icon: "mdi-view-dashboard" },
 ];
 
-export default defineComponent({
+export default Vue.extend({
   name: "app",
   props: {
     changeSelectedNoteId: {
       type: Function as PropType<(id: string) => void>,
     },
   },
-  setup(props, { root }) {
-    const router = root.$router;
-    const store = root.$store;
-    const state = reactive<State>({
+  data() {
+    return {
       items: defaultItems,
       drawer: true,
-    });
-    const notes = computed(() => store.getters.notes);
-
-    const logout = () => {
+    };
+  },
+  computed: {
+    notes() {
+      return this.$store.getters.notes;
+    },
+  },
+  methods: {
+    logout() {
       firebase
         .auth()
         .signOut()
-        .then(function() {
-          router.push("/login");
+        .then(() => {
+          this.$router.push("/login");
         })
         .catch((error) => {
           console.error(error.message);
-          router.push("/login");
+          this.$router.push("/login");
         });
-    };
-
-    const onClickCategory = (id: string) => {
+    },
+    onClickCategory(id: string) {
       switch (id) {
         case "get-all-notes":
-          store.dispatch("getAllNotes");
+          this.$store.dispatch("getAllNotes");
           break;
         case "get-notes-by-category":
-          store.dispatch("getNotesByCategory");
+          this.$store.dispatch("getNotesByCategory");
           break;
         default:
           break;
       }
-    };
-
-    const handleAddNote = () => {
-      store.dispatch("createNote");
-    };
-
-    const handleDeleteNote = (id: string) => {
+    },
+    handleAddNote() {
+      this.$store.dispatch("createNote");
+    },
+    handleDeleteNote(id: string) {
       if (window.confirm("ノートを削除します。よろしいですか？")) {
-        store.dispatch("deleteNote", { id });
+        this.$store.dispatch("deleteNote", { id });
       }
-    };
-
-    return {
-      ...toRefs(state),
-      notes,
-      logout,
-      onClickCategory,
-      handleAddNote,
-      handleDeleteNote,
-    };
+    },
   },
 });
 </script>
