@@ -8,11 +8,6 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "app",
-  computed: {
-    user() {
-      return this.$store.getters.userData;
-    },
-  },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {

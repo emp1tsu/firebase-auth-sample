@@ -102,6 +102,7 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import firebase from "firebase/app";
+import { Note } from "../types";
 
 type Item = {
   id: string;
@@ -116,6 +117,18 @@ const defaultItems: Item[] = [
 export default Vue.extend({
   name: "app",
   props: {
+    notes: {
+      type: Array as PropType<Note[]>,
+    },
+    getAllNotes: {
+      type: Function as PropType<() => void>,
+    },
+    createNote: {
+      type: Function as PropType<() => void>,
+    },
+    deleteNote: {
+      type: Function as PropType<(id: string) => void>,
+    },
     changeSelectedNoteId: {
       type: Function as PropType<(id: string) => void>,
     },
@@ -125,11 +138,6 @@ export default Vue.extend({
       items: defaultItems,
       drawer: true,
     };
-  },
-  computed: {
-    notes() {
-      return this.$store.getters.notes;
-    },
   },
   methods: {
     logout() {
@@ -144,24 +152,21 @@ export default Vue.extend({
           this.$router.push("/login");
         });
     },
-    onClickCategory(id: string) {
+    async onClickCategory(id: string) {
       switch (id) {
         case "get-all-notes":
-          this.$store.dispatch("getAllNotes");
-          break;
-        case "get-notes-by-category":
-          this.$store.dispatch("getNotesByCategory");
+          await this.getAllNotes();
           break;
         default:
           break;
       }
     },
-    handleAddNote() {
-      this.$store.dispatch("createNote");
+    async handleAddNote() {
+      await this.createNote();
     },
     handleDeleteNote(id: string) {
       if (window.confirm("ノートを削除します。よろしいですか？")) {
-        this.$store.dispatch("deleteNote", { id });
+        this.deleteNote(id);
       }
     },
   },

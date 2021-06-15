@@ -24,7 +24,7 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import MonacoEditor from "vue-monaco";
-import { Note } from "@/store/types";
+import { Note } from "../types";
 
 type DataType = {
   editor: any;
@@ -40,6 +40,11 @@ export default Vue.extend({
         return {};
       },
     },
+    updateNote: {
+      type: Function as PropType<
+        (id: string, title: string, body: string) => void
+      >,
+    },
   },
   data(): DataType {
     return {
@@ -52,10 +57,10 @@ export default Vue.extend({
     });
   },
   methods: {
-    handleUpdateNote(id: string, title: string, body: string) {
+    async handleUpdateNote(id: string, title: string, body: string) {
       console.log(id, title, body);
       if (!id) return;
-      this.$store.dispatch("updateNote", { id, title, body });
+      await this.updateNote(id, title, body);
     },
   },
 });
